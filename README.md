@@ -91,6 +91,7 @@ this, the chat widget on the frontend will show "chat is not configured yet."
 | `GROQ_API_KEY` | Optional | Enables the AI chat widget |
 | `ORCID_ID` | Optional | Defaults to Tonmoy's ORCID already |
 | `GITHUB_USERNAME` | Optional | Defaults to `tonmoy7722` already |
+| `GITHUB_TOKEN` | Recommended | Avoids "GitHub API returned 403" from the shared rate limit — see `.env.example` for how to create one |
 
 5. Deploy. Visit your Render URL — you should see `{"status":"ok",...}`.
 6. Quick checks:

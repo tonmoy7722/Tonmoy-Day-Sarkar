@@ -224,9 +224,16 @@ app.get('/api/github-repos', async (req, res) => {
     if (cached) return res.json({ ok: true, repos: cached, cached: true });
 
     const username = process.env.GITHUB_USERNAME || 'tonmoy7722';
+    const headers = { Accept: 'application/vnd.github+json', 'User-Agent': 'portfolio-backend' };
+    // Optional: a GitHub token raises the rate limit from 60/hour (shared
+    // across everyone on Render's free-tier IPs) to 5,000/hour, and avoids
+    // 403s caused by other users' traffic exhausting the shared limit.
+    if (process.env.GITHUB_TOKEN) {
+      headers.Authorization = `Bearer ${process.env.GITHUB_TOKEN}`;
+    }
     const response = await fetch(
       `https://api.github.com/users/${username}/repos?sort=updated&per_page=6`,
-      { headers: { Accept: 'application/vnd.github+json', 'User-Agent': 'portfolio-backend' } }
+      { headers }
     );
     if (!response.ok) throw new Error(`GitHub API returned ${response.status}`);
     const data = await response.json();
