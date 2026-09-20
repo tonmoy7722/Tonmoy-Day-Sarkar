@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Tonmoy Day Sarkar — Machine Learning Researcher</title>
+<title>Tonmoy Day Sarkar — Software Engineer</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;0,6..72,600;1,6..72,400;1,6..72,500&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
@@ -193,6 +193,78 @@
   .footer-contact a:hover{border-bottom-color:var(--brass); color:var(--brass-bright);}
   .footer-note{margin-top:40px; font-size:13px; color:var(--text-on-ink-muted); border-top:1px solid var(--line-on-ink); padding-top:24px;}
 
+  /* ---------- Contact form ---------- */
+  .contact-form{margin-top:26px; max-width:420px;}
+  .form-row{margin-bottom:16px;}
+  .form-row label{
+    display:block; font-size:12.5px; letter-spacing:.03em; text-transform:uppercase;
+    color:var(--text-on-ink-muted); margin-bottom:7px;
+  }
+  .form-row input, .form-row textarea{
+    width:100%; background:transparent; border:1px solid var(--line-on-ink);
+    border-radius:3px; padding:10px 12px; font-family:'IBM Plex Sans', sans-serif;
+    font-size:14.5px; color:var(--text-on-ink); resize:vertical;
+  }
+  .form-row input::placeholder, .form-row textarea::placeholder{color:var(--text-on-ink-muted); opacity:.6;}
+  .form-row input:focus, .form-row textarea:focus{outline:none; border-color:var(--brass);}
+  .form-row textarea{min-height:110px;}
+  .hp-field{position:absolute; left:-9999px; width:1px; height:1px; overflow:hidden;}
+  .form-submit{
+    display:inline-flex; align-items:center; gap:8px; cursor:pointer;
+    font-family:'IBM Plex Sans', sans-serif; font-size:14.5px; font-weight:500;
+    padding:11px 22px; border-radius:3px; border:1px solid var(--brass);
+    background:var(--brass); color:#161311;
+  }
+  .form-submit:hover{background:var(--brass-bright);}
+  .form-submit:disabled{opacity:.55; cursor:not-allowed;}
+  .form-status{margin-top:12px; font-size:13.5px; min-height:1.4em;}
+  .form-status.ok{color:#8ac48f;}
+  .form-status.err{color:#e2988f;}
+
+  /* ---------- New-publication badge ---------- */
+  .pub-new-badge{
+    display:inline-block; font-size:11px; text-transform:uppercase; letter-spacing:.04em;
+    color:#fff; background:var(--pine); border-radius:3px; padding:2px 7px; margin-left:8px; vertical-align:middle;
+  }
+
+  /* ---------- Project links (within plain-desc) ---------- */
+  .project-meta{color:var(--text-muted); font-size:13px; margin-top:4px;}
+  .project-meta a{color:var(--brass); text-decoration:none; border-bottom:1px solid var(--line);}
+  .project-meta a:hover{color:var(--brass-bright);}
+
+  /* ---------- Chat widget ---------- */
+  #chatToggle{
+    position:fixed; bottom:24px; right:24px; z-index:50;
+    background:var(--brass); color:#161311; border:none; border-radius:999px;
+    padding:13px 20px; font-family:'IBM Plex Sans', sans-serif; font-size:14px; font-weight:600;
+    cursor:pointer; box-shadow:0 4px 18px rgba(0,0,0,.25);
+  }
+  #chatToggle:hover{background:var(--brass-bright);}
+  #chatPanel{
+    position:fixed; bottom:82px; right:24px; z-index:50; width:340px; max-width:calc(100vw - 32px);
+    background:var(--ivory); border:1px solid var(--line); border-radius:8px; box-shadow:0 8px 32px rgba(0,0,0,.3);
+    display:none; flex-direction:column; max-height:460px;
+  }
+  #chatPanel.open{display:flex;}
+  .chat-header{
+    padding:14px 16px; border-bottom:1px solid var(--line); font-family:'Newsreader', serif;
+    font-style:italic; font-size:16px; color:var(--brass); display:flex; justify-content:space-between; align-items:center;
+  }
+  .chat-header button{background:none; border:none; font-size:18px; cursor:pointer; color:var(--text-muted);}
+  .chat-messages{flex:1; overflow-y:auto; padding:14px 16px; display:flex; flex-direction:column; gap:10px; min-height:120px;}
+  .chat-msg{font-size:14px; line-height:1.5; padding:9px 12px; border-radius:8px; max-width:88%;}
+  .chat-msg.user{align-self:flex-end; background:var(--brass); color:#161311;}
+  .chat-msg.bot{align-self:flex-start; background:var(--line); color:var(--text);}
+  .chat-input-row{display:flex; gap:8px; padding:12px 14px; border-top:1px solid var(--line);}
+  .chat-input-row input{
+    flex:1; border:1px solid var(--line); border-radius:6px; padding:9px 10px; font-size:14px;
+    font-family:'IBM Plex Sans', sans-serif;
+  }
+  .chat-input-row button{
+    background:var(--brass); border:none; border-radius:6px; padding:9px 14px; cursor:pointer; font-weight:600;
+  }
+  .chat-input-row button:disabled{opacity:.5; cursor:not-allowed;}
+
   /* one orchestrated entrance, hero only */
   .reveal{opacity:0; transform:translateY(10px); transition:opacity .8s ease, transform .8s ease;}
   .reveal.in{opacity:1; transform:translateY(0);}
@@ -244,6 +316,7 @@
     <ul class="nav-links" id="navLinks">
       <li><a href="#about">About</a></li>
       <li><a href="#publications">Publications</a></li>
+      <li><a href="#projects">Projects</a></li>
       <li><a href="#experience">Experience</a></li>
       <li><a href="#education">Education</a></li>
       <li><a href="#skills">Skills</a></li>
@@ -337,6 +410,15 @@
             <a class="pub-doi" href="https://doi.org/10.1109/AECE62803.2024.10911593" target="_blank" rel="noopener">doi.org/10.1109/AECE62803.2024.10911593</a>
           </div>
         </li>
+      </ul>
+    </div>
+  </section>
+
+  <section id="projects">
+    <div class="wrap prose">
+      <div class="section-head"><span class="kicker">Projects</span><h2>Recent work on GitHub</h2></div>
+      <ul class="plain-list" id="projectsList">
+        <li class="plain-item" style="grid-template-columns:1fr;"><p class="plain-desc" id="projectsStatus">Loading recent projects…</p></li>
       </ul>
     </div>
   </section>
@@ -449,6 +531,28 @@
         <div><a href="tel:+8801611348009">+880 1611 348009</a></div>
         <div><a href="Tonmoy_Day_Sarkar_CV.pdf" download="Tonmoy_Day_Sarkar_CV.pdf">Download CV</a></div>
       </div>
+
+      <form class="contact-form" id="contactForm" novalidate>
+        <div class="form-row">
+          <label for="cf-name">Name</label>
+          <input type="text" id="cf-name" name="name" placeholder="Your name" required>
+        </div>
+        <div class="form-row">
+          <label for="cf-email">Email</label>
+          <input type="email" id="cf-email" name="email" placeholder="you@example.com" required>
+        </div>
+        <div class="form-row">
+          <label for="cf-message">Message</label>
+          <textarea id="cf-message" name="message" placeholder="What would you like to say?" required></textarea>
+        </div>
+        <!-- Honeypot field: hidden from real users, often filled in by bots -->
+        <div class="hp-field" aria-hidden="true">
+          <label for="cf-company">Company</label>
+          <input type="text" id="cf-company" name="company" tabindex="-1" autocomplete="off">
+        </div>
+        <button type="submit" class="form-submit" id="cf-submit">Send message</button>
+        <div class="form-status" id="cf-status" role="status" aria-live="polite"></div>
+      </form>
     </div>
     <div>
       <span class="kicker" style="color:var(--brass)">Elsewhere</span>
@@ -464,6 +568,21 @@
     <div class="footer-note" style="grid-column:1 / -1;">Tangail, Bangladesh</div>
   </div>
 </footer>
+
+<button id="chatToggle" aria-expanded="false">Ask about Tonmoy</button>
+<div id="chatPanel">
+  <div class="chat-header">
+    <span>Ask about Tonmoy</span>
+    <button id="chatClose" aria-label="Close chat">&times;</button>
+  </div>
+  <div class="chat-messages" id="chatMessages">
+    <div class="chat-msg bot">Hi! Ask me anything about Tonmoy's background, research, or skills.</div>
+  </div>
+  <div class="chat-input-row">
+    <input type="text" id="chatInput" placeholder="Type a question…" maxlength="300">
+    <button id="chatSend">Send</button>
+  </div>
+</div>
 
 <script>
   var toggle = document.getElementById('navToggle');
@@ -481,6 +600,190 @@
     setTimeout(function(){ document.getElementById('heroText').classList.add('in'); }, 80);
     setTimeout(function(){ document.getElementById('heroPhoto').classList.add('in'); }, 260);
   });
+
+  // ---------- Backend base URL ----------
+  // Replace with your deployed Render backend URL (see README). Every other
+  // endpoint (publications, projects, tracking, chat) is derived from this.
+  var API_BASE = "https://your-backend.onrender.com";
+  var CONTACT_API_URL = API_BASE + "/api/contact";
+
+  var contactForm = document.getElementById('contactForm');
+  var cfSubmit = document.getElementById('cf-submit');
+  var cfStatus = document.getElementById('cf-status');
+
+  contactForm.addEventListener('submit', function(e){
+    e.preventDefault();
+    cfStatus.textContent = '';
+    cfStatus.className = 'form-status';
+
+    var name = document.getElementById('cf-name').value.trim();
+    var email = document.getElementById('cf-email').value.trim();
+    var message = document.getElementById('cf-message').value.trim();
+    var company = document.getElementById('cf-company').value; // honeypot
+
+    if(!name || !email || !message){
+      cfStatus.textContent = 'Please fill in all fields.';
+      cfStatus.className = 'form-status err';
+      return;
+    }
+
+    cfSubmit.disabled = true;
+    cfSubmit.textContent = 'Sending…';
+
+    fetch(CONTACT_API_URL, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ name: name, email: email, message: message, company: company })
+    })
+    .then(function(res){ return res.json().then(function(data){ return { ok: res.ok, data: data }; }); })
+    .then(function(result){
+      if(result.ok && result.data.ok){
+        cfStatus.textContent = "Thanks — your message is on its way.";
+        cfStatus.className = 'form-status ok';
+        contactForm.reset();
+      } else {
+        cfStatus.textContent = (result.data && result.data.error) || 'Something went wrong. Please try again.';
+        cfStatus.className = 'form-status err';
+      }
+    })
+    .catch(function(){
+      cfStatus.textContent = 'Could not reach the server. Please try again in a moment.';
+      cfStatus.className = 'form-status err';
+    })
+    .finally(function(){
+      cfSubmit.disabled = false;
+      cfSubmit.textContent = 'Send message';
+    });
+  });
+
+  // ---------- Visit tracking ----------
+  fetch(API_BASE + '/api/track', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ type: 'pageview', path: window.location.pathname })
+  }).catch(function(){ /* tracking is best-effort; ignore failures */ });
+
+  // Track CV downloads (both the hero button and footer link use this href).
+  document.querySelectorAll('a[href="Tonmoy_Day_Sarkar_CV.pdf"]').forEach(function(link){
+    link.addEventListener('click', function(){
+      fetch(API_BASE + '/api/track', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ type: 'cv_download', path: window.location.pathname })
+      }).catch(function(){});
+    });
+  });
+
+  // ---------- Publications: append any papers not already listed ----------
+  fetch(API_BASE + '/api/publications')
+    .then(function(res){ return res.json(); })
+    .then(function(result){
+      if(!result.ok || !Array.isArray(result.publications)) return;
+      var existingDois = Array.from(document.querySelectorAll('.pub-doi')).map(function(a){
+        return a.getAttribute('href');
+      });
+      var pubList = document.querySelector('.pub-list');
+      var romanNumerals = ['v','vi','vii','viii','ix','x','xi','xii'];
+      var newCount = 0;
+      result.publications.forEach(function(pub){
+        var doiUrl = pub.doi ? 'https://doi.org/' + pub.doi : null;
+        if(doiUrl && existingDois.indexOf(doiUrl) !== -1) return; // already shown statically
+        if(newCount >= romanNumerals.length) return;
+        var li = document.createElement('li');
+        li.className = 'pub';
+        li.innerHTML =
+          '<span class="pub-index">' + romanNumerals[newCount] + '.</span>' +
+          '<div>' +
+            '<div class="pub-title">' + escapeHtmlClient(pub.title) + '<span class="pub-new-badge">New</span></div>' +
+            '<div class="pub-venue">' + escapeHtmlClient(pub.journal || '') + (pub.year ? ' &middot; ' + pub.year : '') + '</div>' +
+            (doiUrl ? '<a class="pub-doi" href="' + doiUrl + '" target="_blank" rel="noopener">' + doiUrl.replace('https://','') + '</a>' : '') +
+          '</div>';
+        pubList.appendChild(li);
+        newCount++;
+      });
+    })
+    .catch(function(){ /* keep the static list as-is if this fails */ });
+
+  // ---------- Projects: GitHub repos ----------
+  fetch(API_BASE + '/api/github-repos')
+    .then(function(res){ return res.json(); })
+    .then(function(result){
+      var list = document.getElementById('projectsList');
+      if(!result.ok || !Array.isArray(result.repos) || result.repos.length === 0){
+        list.innerHTML = '<li class="plain-item" style="grid-template-columns:1fr;"><p class="plain-desc">Couldn\'t load projects right now — <a href="https://github.com/tonmoy7722" target="_blank" rel="noopener">see them on GitHub</a>.</p></li>';
+        return;
+      }
+      list.innerHTML = result.repos.map(function(repo){
+        return '<li class="plain-item" style="grid-template-columns:1fr;">' +
+          '<div>' +
+            '<div class="plain-role"><a href="' + repo.url + '" target="_blank" rel="noopener" style="color:inherit; text-decoration:none;">' + escapeHtmlClient(repo.name) + '</a></div>' +
+            (repo.description ? '<p class="plain-desc">' + escapeHtmlClient(repo.description) + '</p>' : '') +
+            '<div class="project-meta">' + (repo.language ? escapeHtmlClient(repo.language) + ' &middot; ' : '') + '\u2605 ' + repo.stars + '</div>' +
+          '</div>' +
+        '</li>';
+      }).join('');
+    })
+    .catch(function(){
+      document.getElementById('projectsList').innerHTML = '<li class="plain-item" style="grid-template-columns:1fr;"><p class="plain-desc">Couldn\'t load projects right now — <a href="https://github.com/tonmoy7722" target="_blank" rel="noopener">see them on GitHub</a>.</p></li>';
+    });
+
+  function escapeHtmlClient(str){
+    var d = document.createElement('div');
+    d.textContent = str == null ? '' : str;
+    return d.innerHTML;
+  }
+
+  // ---------- "Ask about Tonmoy" chat widget ----------
+  var chatToggle = document.getElementById('chatToggle');
+  var chatPanel = document.getElementById('chatPanel');
+  var chatClose = document.getElementById('chatClose');
+  var chatMessages = document.getElementById('chatMessages');
+  var chatInput = document.getElementById('chatInput');
+  var chatSend = document.getElementById('chatSend');
+  var chatHistory = [];
+
+  function toggleChat(open){
+    chatPanel.classList.toggle('open', open);
+    chatToggle.setAttribute('aria-expanded', open ? 'true' : 'false');
+    if(open) chatInput.focus();
+  }
+  chatToggle.addEventListener('click', function(){ toggleChat(!chatPanel.classList.contains('open')); });
+  chatClose.addEventListener('click', function(){ toggleChat(false); });
+
+  function addChatMsg(text, who){
+    var div = document.createElement('div');
+    div.className = 'chat-msg ' + who;
+    div.textContent = text;
+    chatMessages.appendChild(div);
+    chatMessages.scrollTop = chatMessages.scrollHeight;
+  }
+
+  function sendChat(){
+    var question = chatInput.value.trim();
+    if(!question) return;
+    addChatMsg(question, 'user');
+    chatInput.value = '';
+    chatSend.disabled = true;
+
+    fetch(API_BASE + '/api/ask', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ question: question, history: chatHistory })
+    })
+    .then(function(res){ return res.json(); })
+    .then(function(result){
+      var answer = (result.ok && result.answer) || (result.error || "Sorry, I couldn't answer that right now.");
+      addChatMsg(answer, 'bot');
+      chatHistory.push({ role: 'user', content: question });
+      chatHistory.push({ role: 'assistant', content: answer });
+    })
+    .catch(function(){
+      addChatMsg('Could not reach the assistant right now. Please try again shortly.', 'bot');
+    })
+    .finally(function(){ chatSend.disabled = false; });
+  }
+  chatSend.addEventListener('click', sendChat);
+  chatInput.addEventListener('keydown', function(e){ if(e.key === 'Enter') sendChat(); });
 </script>
 
 </body>
