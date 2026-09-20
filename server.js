@@ -3,7 +3,6 @@
 
 const express = require('express');
 const cors = require('cors');
-const nodemailer = require('nodemailer');
 const rateLimit = require('express-rate-limit');
 const { Pool } = require('pg');
 
@@ -58,14 +57,36 @@ async function initDb() {
 }
 initDb().catch(err => console.error('DB init error:', err));
 
-// ---------- Mail transport ----------
-const transporter = nodemailer.createTransport({
-  service: 'gmail',
-  auth: {
-    user: process.env.EMAIL_USER,
-    pass: process.env.EMAIL_PASS,
-  },
-});
+// ---------- Mail sending (Resend HTTP API) ----------
+// Render's free tier blocks outbound SMTP ports, so plain Nodemailer+Gmail
+// doesn't work there. Resend sends over HTTPS instead, so it isn't affected.
+// Free tier, no card required: https://resend.com — create an API key and
+// set RESEND_API_KEY. No domain verification needed as long as TO_EMAIL is
+// the same address you signed up to Resend with (see README).
+async function sendContactEmail({ name, email, message }) {
+  const response = await fetch('https://api.resend.com/emails', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${process.env.RESEND_API_KEY}`,
+    },
+    body: JSON.stringify({
+      from: 'Portfolio Contact Form <onboarding@resend.dev>',
+      to: process.env.TO_EMAIL,
+      reply_to: email,
+      subject: `New portfolio message from ${name}`,
+      text: `Name: ${name}\nEmail: ${email}\n\nMessage:\n${message}`,
+      html: `<p><strong>Name:</strong> ${escapeHtml(name)}</p>
+             <p><strong>Email:</strong> ${escapeHtml(email)}</p>
+             <p><strong>Message:</strong></p>
+             <p>${escapeHtml(message).replace(/\n/g, '<br>')}</p>`,
+    }),
+  });
+  if (!response.ok) {
+    const errText = await response.text();
+    throw new Error(`Resend API error ${response.status}: ${errText}`);
+  }
+}
 
 function escapeHtml(str) {
   return String(str)
@@ -128,17 +149,7 @@ app.post('/api/contact', contactLimiter, async (req, res) => {
       return res.status(400).json({ ok: false, error: 'Message is too long.' });
     }
 
-    await transporter.sendMail({
-      from: `"Portfolio Contact Form" <${process.env.EMAIL_USER}>`,
-      to: process.env.TO_EMAIL || process.env.EMAIL_USER,
-      replyTo: email,
-      subject: `New portfolio message from ${name}`,
-      text: `Name: ${name}\nEmail: ${email}\n\nMessage:\n${message}`,
-      html: `<p><strong>Name:</strong> ${escapeHtml(name)}</p>
-             <p><strong>Email:</strong> ${escapeHtml(email)}</p>
-             <p><strong>Message:</strong></p>
-             <p>${escapeHtml(message).replace(/\n/g, '<br>')}</p>`,
-    });
+    await sendContactEmail({ name, email, message });
 
     if (pool) {
       pool.query(

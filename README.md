@@ -17,11 +17,25 @@ variable. Everything else keeps working if you skip them.
 
 ## 1. Contact form email (required)
 
-Same as before:
+Email is sent through **Resend** (https://resend.com) rather than Gmail/SMTP.
+Render's free tier blocks outbound SMTP ports, so a direct Gmail connection
+doesn't work there — Resend sends over plain HTTPS instead, so it isn't
+affected.
 
-1. Go to https://myaccount.google.com/security → turn on **2-Step Verification**.
-2. Go to https://myaccount.google.com/apppasswords → create an app password.
-3. Copy the 16-character password (remove spaces) → this is `EMAIL_PASS`.
+1. Go to https://resend.com/signup → sign up free (no card required).
+2. Go to https://resend.com/api-keys → create an API key. This is your
+   `RESEND_API_KEY`.
+3. Set `TO_EMAIL` to **the same email address you signed up to Resend with**.
+   This matters: without verifying your own domain, Resend's free sending
+   address (`onboarding@resend.dev`) can only deliver to the account owner's
+   own address — which is exactly what you want here, since contact messages
+   should only ever go to you.
+4. Free tier limits: 3,000 emails/month, 100/day — far more than a portfolio
+   contact form needs.
+
+If you later want to send from your own domain (e.g. `you@yourdomain.com`)
+instead of the Resend test sender, add and verify a domain under
+https://resend.com/domains, then change the `from` address in `server.js`.
 
 ## 2. Database — for message history, tracking, and admin (optional but recommended)
 
@@ -69,9 +83,8 @@ this, the chat widget on the frontend will show "chat is not configured yet."
 
 | Variable | Required? | Purpose |
 |---|---|---|
-| `EMAIL_USER` | Yes | Gmail address that sends notifications |
-| `EMAIL_PASS` | Yes | App password from step 1 |
-| `TO_EMAIL` | Yes | Where contact messages are delivered |
+| `RESEND_API_KEY` | Yes | API key from Resend (step 1) |
+| `TO_EMAIL` | Yes | Where contact messages are delivered — must match your Resend account email |
 | `ALLOWED_ORIGINS` | Yes | Your frontend URL(s), comma-separated (`*` while testing) |
 | `DATABASE_URL` | Optional | Enables message history, tracking, admin page |
 | `ADMIN_PASSWORD` | Optional | Protects `/admin` |
@@ -91,17 +104,22 @@ this, the chat widget on the frontend will show "chat is not configured yet."
 ~30-50 seconds to wake on the next request. The frontend already accounts for this
 with loading states.
 
+**Why Resend and not Gmail/SMTP:** Render disabled outbound SMTP ports for free
+web services, so any Nodemailer+Gmail setup fails there with an `ETIMEDOUT`
+connection error — this isn't a bug in this code, it's a platform-level block.
+Resend sends over HTTPS instead, so it works fine on the free tier.
+
 ## 6. Point the frontend at it
 
 In `index.html`, find:
 
 ```js
-var CONTACT_API_URL = "https://your-backend.onrender.com/api/contact";
+var API_BASE = "https://your-backend.onrender.com";
 ```
 
-The frontend derives the other endpoints (`/api/publications`, `/api/github-repos`,
-`/api/track`, `/api/ask`) from the same base URL automatically — you only need to
-set this one line.
+Set it to your real Render URL. The frontend derives every endpoint
+(`/api/contact`, `/api/publications`, `/api/github-repos`, `/api/track`,
+`/api/ask`) from this one base URL.
 
 ## Local development
 
