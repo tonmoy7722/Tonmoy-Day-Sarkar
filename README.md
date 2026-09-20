@@ -70,6 +70,28 @@ forever — nothing is exposed.
 Groq's free tier is generous (enough for a portfolio's traffic) and fast. If you skip
 this, the chat widget on the frontend will show "chat is not configured yet."
 
+## 4b. Publications not showing up? Check ORCID visibility
+
+`/api/publications` only returns works that are set to **"Everyone"** visibility on
+your ORCID account — this is ORCID's own rule for its public API, not something this
+code controls. To check/fix:
+
+1. Log into https://orcid.org
+2. Go to your **Works** section
+3. Each work has a visibility icon (eye/lock/people) — click it and set it to
+   **"Everyone"**, then **Save changes**
+4. Wait a minute or two, then re-test
+
+**Debugging tools** built into the endpoint:
+- `GET /api/publications?nocache=1` — bypasses the 6-hour cache, forces a fresh
+  fetch from ORCID right now (use this instead of restarting the whole service
+  every time you want to re-test)
+- `GET /api/publications?debug=1` — returns the **raw, unfiltered** ORCID API
+  response instead of the parsed list, including `groupCount` (how many works
+  ORCID actually returned). If `groupCount` is 0, the problem is on ORCID's side
+  (visibility) — if it's more than 0 but `publications` in the normal response is
+  still empty, that points to a parsing issue, which is worth reporting.
+
 ## 5. Deploy to Render
 
 1. Push this `portfolio-backend` folder to its own GitHub repo (or a subfolder of an
@@ -86,7 +108,7 @@ this, the chat widget on the frontend will show "chat is not configured yet."
 | `RESEND_API_KEY` | Yes | API key from Resend (step 1) |
 | `TO_EMAIL` | Yes | Where contact messages are delivered — must match your Resend account email |
 | `ALLOWED_ORIGINS` | Yes | Your frontend URL(s), comma-separated (`*` while testing) |
-| `DATABASE_URL` | Optional | Enables message history, tracking, admin page |
+| `DATABASE_URL` | Optional | Enables message history, tracking, admin page — use Neon, or Supabase's **Session pooler** string (not "Direct connection", which is IPv6-only and fails on Render) |
 | `ADMIN_PASSWORD` | Optional | Protects `/admin` |
 | `GROQ_API_KEY` | Optional | Enables the AI chat widget |
 | `ORCID_ID` | Optional | Defaults to Tonmoy's ORCID already |
@@ -95,7 +117,8 @@ this, the chat widget on the frontend will show "chat is not configured yet."
 
 5. Deploy. Visit your Render URL — you should see `{"status":"ok",...}`.
 6. Quick checks:
-   - `GET /api/publications` → should return your papers pulled from ORCID.
+   - `GET /api/publications` → should return your papers pulled from ORCID (see
+     section 4b above if this is empty).
    - `GET /api/github-repos` → should return your latest repos.
    - `GET /admin` → enter your admin password → should show stats + messages
      (once you've set `DATABASE_URL` and `ADMIN_PASSWORD`, and at least one

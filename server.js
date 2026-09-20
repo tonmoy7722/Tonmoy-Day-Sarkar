@@ -186,34 +186,61 @@ app.post('/api/track', trackLimiter, async (req, res) => {
 });
 
 // ---------- Publications feed (ORCID public API — free, no key) ----------
+// Add ?nocache=1 to the URL to bypass the 6-hour cache while testing.
+// Add ?debug=1 to see the raw ORCID response instead of the parsed list —
+// useful for diagnosing why publications might be missing or empty.
 app.get('/api/publications', async (req, res) => {
   try {
-    const cached = getCached('publications');
-    if (cached) return res.json({ ok: true, publications: cached, cached: true });
+    const bypassCache = req.query.nocache === '1';
+    const debug = req.query.debug === '1';
+
+    if (!bypassCache && !debug) {
+      const cached = getCached('publications');
+      if (cached) return res.json({ ok: true, publications: cached, cached: true });
+    }
 
     const orcid = process.env.ORCID_ID || '0009-0007-3565-6578';
-    const response = await fetch(`https://pub.orcid.org/v3.0/${orcid}/works`, {
-      headers: { Accept: 'application/json' },
+    const orcidUrl = `https://pub.orcid.org/v3.0/${orcid}/works`;
+    const response = await fetch(orcidUrl, {
+      headers: { Accept: 'application/vnd.orcid+json' },
     });
-    if (!response.ok) throw new Error(`ORCID API returned ${response.status}`);
+
+    if (!response.ok) {
+      const errText = await response.text();
+      throw new Error(`ORCID API returned ${response.status}: ${errText.slice(0, 300)}`);
+    }
     const data = await response.json();
 
+    if (debug) {
+      // Raw, unfiltered look at what ORCID actually sent back.
+      return res.json({
+        ok: true,
+        orcidUrl,
+        groupCount: Array.isArray(data.group) ? data.group.length : 0,
+        raw: data,
+      });
+    }
+
     const publications = (data.group || []).map(group => {
-      const summary = group['work-summary'][0];
+      const summaries = group['work-summary'] || [];
+      const summary = summaries[0];
+      if (!summary) return null;
       const title = summary.title && summary.title.title && summary.title.title.value;
       const journal = summary['journal-title'] && summary['journal-title'].value;
       const year = summary['publication-date'] && summary['publication-date'].year && summary['publication-date'].year.value;
-      const doiEntry = (summary['external-ids'] && summary['external-ids']['external-id'] || [])
+      const doiEntry = ((summary['external-ids'] && summary['external-ids']['external-id']) || [])
         .find(id => id['external-id-type'] === 'doi');
       const doi = doiEntry ? doiEntry['external-id-value'] : null;
       return { title, journal, year, doi };
-    }).filter(p => p.title);
+    }).filter(p => p && p.title);
 
-    setCached('publications', publications, 6 * 60 * 60 * 1000); // 6 hours
-    res.json({ ok: true, publications, cached: false });
+    if (!bypassCache) {
+      setCached('publications', publications, 6 * 60 * 60 * 1000); // 6 hours
+    }
+    res.json({ ok: true, publications, cached: false, groupCount: (data.group || []).length });
   } catch (err) {
     console.error('Publications fetch error:', err);
-    res.status(502).json({ ok: false, error: 'Could not fetch publications right now.' });
+    res.status(502).json({ ok: false, error: 'Could not fetch publications right now.', detail: String(err.message || err) });
   }
 });
 
