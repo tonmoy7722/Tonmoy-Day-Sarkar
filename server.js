@@ -341,7 +341,7 @@ app.post('/api/ask', askLimiter, async (req, res) => {
         Authorization: `Bearer ${process.env.GROQ_API_KEY}`,
       },
       body: JSON.stringify({
-        model: 'llama-3.1-8b-instant',
+        model: 'openai/gpt-oss-20b',
         messages,
         max_tokens: 300,
         temperature: 0.4,
