@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Tonmoy Day Sarkar — Software Engineer</title>
+<title>Tonmoy Day Sarkar — Machine Learning Researcher</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;0,6..72,600;1,6..72,400;1,6..72,500&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
@@ -83,8 +83,9 @@
   .on-ink .muted{color:var(--text-on-ink-muted);}
 
   /* ---------- Hero ---------- */
-  .hero{padding:88px 0 84px 0;}
-  .hero-grid{display:grid; grid-template-columns:minmax(0,1.15fr) minmax(0,0.85fr); gap:64px; align-items:center;}
+  .hero{padding:88px 0 84px 0; position:relative; overflow:hidden;}
+  .hero-canvas{position:absolute; inset:0; width:100%; height:100%; opacity:.5; pointer-events:none;}
+  .hero-grid{display:grid; grid-template-columns:minmax(0,1.15fr) minmax(0,0.85fr); gap:64px; align-items:center; position:relative; z-index:1;}
   .hero-preface{
     font-family:'Newsreader', serif; font-style:italic; font-size:17px; color:var(--text-on-ink-muted);
     margin-bottom:20px;
@@ -121,6 +122,45 @@
     text-align:center; font-family:'Newsreader', serif; font-style:italic; font-size:14.5px;
     color:var(--text-on-ink-muted); margin-top:14px;
   }
+
+  /* ---------- Terminal (hero) ---------- */
+  .terminal{
+    margin-top:34px; max-width:480px; background:var(--ink-soft);
+    border:1px solid var(--line-on-ink); border-radius:5px; overflow:hidden;
+  }
+  .terminal-bar{
+    display:flex; align-items:center; gap:6px; padding:9px 12px;
+    border-bottom:1px solid var(--line-on-ink);
+  }
+  .terminal-dot{width:9px; height:9px; border-radius:50%; background:var(--line-on-ink);}
+  .terminal-body{
+    padding:16px 18px 18px; font-family:'IBM Plex Mono', monospace; font-size:13px; line-height:1.9;
+    min-height:96px;
+  }
+  .terminal-line{color:var(--text-on-ink-muted);}
+  .terminal-prompt{color:var(--brass-bright); margin-right:8px;}
+  .terminal-output{color:var(--text-on-ink); display:block; margin:2px 0 10px 18px;}
+  .terminal-cursor{
+    display:inline-block; width:7px; height:14px; background:var(--brass-bright);
+    margin-left:2px; vertical-align:middle; animation:blink 1s steps(1) infinite;
+  }
+  @keyframes blink{50%{opacity:0;}}
+
+  /* ---------- Tech chips ---------- */
+  .tech-chips{display:flex; flex-wrap:wrap; gap:8px; margin-top:16px;}
+  .tech-chip{
+    font-family:'IBM Plex Mono', monospace; font-size:12px; color:var(--text-muted);
+    border:1px solid var(--line); border-radius:3px; padding:5px 10px;
+  }
+
+  /* ---------- GitHub contribution graph ---------- */
+  .contrib-wrap{margin-top:44px; padding-top:32px; border-top:1px solid var(--line);}
+  .contrib-wrap img{width:100%; height:auto; display:block; filter:sepia(8%);}
+  .contrib-caption{font-size:13px; color:var(--text-muted); margin-top:10px;}
+
+  /* ---------- Scroll reveal (section headings) ---------- */
+  .scroll-reveal{opacity:0; transform:translateY(14px); transition:opacity .7s ease, transform .7s ease;}
+  .scroll-reveal.in{opacity:1; transform:translateY(0);}
 
   /* ---------- Sections ---------- */
   section{padding:76px 0;}
@@ -265,6 +305,42 @@
   }
   .chat-input-row button:disabled{opacity:.5; cursor:not-allowed;}
 
+  /* ---------- Command palette ---------- */
+  #cmdkTrigger{
+    position:fixed; bottom:24px; left:24px; z-index:50;
+    background:var(--ink); color:var(--text-on-ink-muted); border:1px solid var(--line-on-ink);
+    border-radius:999px; padding:10px 16px; font-family:'IBM Plex Sans', sans-serif; font-size:13px;
+    cursor:pointer; display:flex; align-items:center; gap:8px; box-shadow:0 4px 18px rgba(0,0,0,.2);
+  }
+  #cmdkTrigger:hover{color:var(--text-on-ink); border-color:var(--brass);}
+  #cmdkTrigger kbd{
+    font-family:'IBM Plex Mono', monospace; font-size:11px; border:1px solid var(--line-on-ink);
+    border-radius:3px; padding:1px 6px; color:var(--brass-bright);
+  }
+  #cmdkBackdrop{
+    position:fixed; inset:0; z-index:100; background:rgba(15,13,10,.55);
+    display:none; align-items:flex-start; justify-content:center; padding-top:12vh;
+  }
+  #cmdkBackdrop.open{display:flex;}
+  #cmdkModal{
+    width:100%; max-width:520px; max-height:60vh; background:var(--ivory); border:1px solid var(--brass);
+    border-radius:8px; box-shadow:0 20px 60px rgba(0,0,0,.4); overflow:hidden; display:flex; flex-direction:column;
+  }
+  #cmdkInput{
+    width:100%; border:none; border-bottom:1px solid var(--line); padding:16px 18px; font-size:16px;
+    font-family:'IBM Plex Sans', sans-serif; color:var(--text); background:transparent; outline:none;
+  }
+  #cmdkInput::placeholder{color:var(--text-muted);}
+  #cmdkList{list-style:none; margin:0; padding:8px; overflow-y:auto;}
+  .cmdk-item{
+    display:flex; align-items:baseline; gap:10px; padding:11px 12px; border-radius:5px;
+    cursor:pointer; font-size:14.5px; color:var(--text);
+  }
+  .cmdk-item .cmdk-hint{color:var(--text-muted); font-size:12.5px; margin-left:auto;}
+  .cmdk-item.active{background:var(--brass); color:#161311;}
+  .cmdk-item.active .cmdk-hint{color:#161311; opacity:.7;}
+  .cmdk-empty{padding:20px; text-align:center; color:var(--text-muted); font-size:14px;}
+
   /* one orchestrated entrance, hero only */
   .reveal{opacity:0; transform:translateY(10px); transition:opacity .8s ease, transform .8s ease;}
   .reveal.in{opacity:1; transform:translateY(0);}
@@ -298,7 +374,8 @@
 
   @media (prefers-reduced-motion: reduce){
     *{animation:none !important; transition:none !important;}
-    .reveal{opacity:1; transform:none;}
+    .reveal, .scroll-reveal{opacity:1; transform:none;}
+    .terminal-cursor{opacity:1;}
   }
 </style>
 </head>
@@ -326,6 +403,7 @@
 </nav>
 
 <header class="hero on-ink" id="top">
+  <canvas id="heroCanvas" class="hero-canvas" aria-hidden="true"></canvas>
   <div class="wrap hero-grid">
     <div class="reveal" id="heroText">
       <span class="hero-preface">A software engineer trained in applied research —</span>
@@ -335,6 +413,12 @@
       <div class="hero-cta">
         <a class="btn btn-solid" href="Tonmoy_Day_Sarkar_CV.pdf" download="Tonmoy_Day_Sarkar_CV.pdf">Download CV</a>
         <a class="btn btn-line" href="mailto:tonmoysarkar7722@gmail.com">Get in touch</a>
+      </div>
+      <div class="terminal" aria-hidden="true">
+        <div class="terminal-bar">
+          <span class="terminal-dot"></span><span class="terminal-dot"></span><span class="terminal-dot"></span>
+        </div>
+        <div class="terminal-body" id="terminalBody"></div>
       </div>
       <div class="social-row">
         <a class="social-badge" href="https://scholar.google.com/citations?hl=en&user=LB6A9soAAAAJ" target="_blank" rel="noopener" aria-label="Google Scholar"><svg viewBox="0 0 25 25" xmlns="http://www.w3.org/2000/svg"><path d="M10.93 2.045c-.547.366-3.22 2.14-5.938 3.945C2.272 7.794.05 9.286.05 9.304c0 .019.136.11.305.2.167.096 2.85 1.583 5.965 3.31l5.656 3.143.144-.074c.082-.04 2.169-1.232 4.642-2.642l4.493-2.568.027 7.947h2.668V9.319l-3.46-2.32c-4.664-3.124-8.392-5.586-8.484-5.606-.045-.008-.527.287-1.076.652M5.355 16.633l.014 2.005 3.31 1.987 3.31 1.982 3.337-2 3.332-2.005V16.62c0-1.092-.013-1.983-.027-1.983s-1.318.782-2.9 1.741l-3.306 1.996-.431.256-1.32-.791a604.12 604.12 0 0 1-3.286-1.979l-2.005-1.21c-.024-.008-.032.883-.027 1.983"/></svg></a>
@@ -358,7 +442,7 @@
     <div class="wrap about-grid">
       <div class="about-photo-frame"><img src="tonmoy_about.jpg" alt="Tonmoy Day Sarkar sitting by the water"></div>
       <div class="about-text">
-        <div class="section-head"><span class="kicker">About</span><h2>Research, applied end to end</h2></div>
+        <div class="section-head scroll-reveal"><span class="kicker">About</span><h2>Research, applied end to end</h2></div>
         <p>My undergraduate thesis and four IEEE publications reflect hands-on work applying machine learning techniques — collaborative filtering, ensemble methods, clustering, hyperparameter tuning — to real-world data across e-commerce, telecom, and urban restaurant datasets.</p>
         <p>I'm looking to extend that foundation toward natural language processing and applied AI systems, working end-to-end from data preprocessing and feature engineering through model selection and evaluation, alongside full-stack development in React and Node.</p>
         <div class="stat-line">
@@ -372,7 +456,7 @@
 
   <section id="publications" class="band-deep">
     <div class="wrap prose">
-      <div class="section-head"><span class="kicker">Publications</span><h2>Peer-reviewed work</h2></div>
+      <div class="section-head scroll-reveal"><span class="kicker">Publications</span><h2>Peer-reviewed work</h2></div>
       <ul class="pub-list">
         <li class="pub">
           <span class="pub-index">i.</span>
@@ -383,22 +467,53 @@
             <a class="pub-doi" href="https://doi.org/10.1109/IC3IoT60841.2024.10550386" target="_blank" rel="noopener">doi.org/10.1109/IC3IoT60841.2024.10550386</a>
           </div>
         </li>
+        <li class="pub">
+          <span class="pub-index">ii.</span>
+          <div>
+            <div class="pub-title">Sarkar, T. D. et al. — "Analysis of customer churn for a telecom company with SMOTE-ENN and hyperparameter-tuned RandomizedSearchCV technique"</div>
+            <div class="pub-venue">2024 International Conference on Advancements in Power, Communication and Intelligent Systems (APCI), IEEE</div>
+            <span class="pub-topic">Churn prediction</span>
+            <a class="pub-doi" href="https://doi.org/10.1109/APCI61480.2024.10617375" target="_blank" rel="noopener">doi.org/10.1109/APCI61480.2024.10617375</a>
+          </div>
+        </li>
+        <li class="pub">
+          <span class="pub-index">iii.</span>
+          <div>
+            <div class="pub-title">Sarkar, T. D. et al. — "Predicting restaurant ratings: a comparative study of linear regression and decision tree regression models"</div>
+            <div class="pub-venue">4th International Conference on Advancement in Electronics &amp; Communication Engineering (AECE), IEEE, 2025</div>
+            <span class="pub-topic">Regression modeling</span>
+            <a class="pub-doi" href="https://doi.org/10.1109/AECE62803.2024.10911460" target="_blank" rel="noopener">doi.org/10.1109/AECE62803.2024.10911460</a>
+          </div>
+        </li>
+        <li class="pub">
+          <span class="pub-index">iv.</span>
+          <div>
+            <div class="pub-title">Sarkar, T. D. et al. — "Comprehensive geospatial and statistical analysis of restaurant distribution using K-means clustering"</div>
+            <div class="pub-venue">4th International Conference on Advancement in Electronics &amp; Communication Engineering (AECE), IEEE, 2025</div>
+            <span class="pub-topic">Geospatial clustering</span>
+            <a class="pub-doi" href="https://doi.org/10.1109/AECE62803.2024.10911593" target="_blank" rel="noopener">doi.org/10.1109/AECE62803.2024.10911593</a>
+          </div>
+        </li>
       </ul>
     </div>
   </section>
 
   <section id="projects">
     <div class="wrap prose">
-      <div class="section-head"><span class="kicker">Projects</span><h2>Recent work on GitHub</h2></div>
+      <div class="section-head scroll-reveal"><span class="kicker">Projects</span><h2>Recent work on GitHub</h2></div>
       <ul class="plain-list" id="projectsList">
         <li class="plain-item" style="grid-template-columns:1fr;"><p class="plain-desc" id="projectsStatus">Loading recent projects…</p></li>
       </ul>
+      <div class="contrib-wrap">
+        <img src="https://ghchart.rshah.org/a9812f/tonmoy7722" alt="Tonmoy Day Sarkar's GitHub contribution graph" loading="lazy">
+        <p class="contrib-caption">A year of commits, pulled live from GitHub.</p>
+      </div>
     </div>
   </section>
 
   <section id="experience">
     <div class="wrap prose">
-      <div class="section-head"><span class="kicker">Experience</span><h2>Where I've worked</h2></div>
+      <div class="section-head scroll-reveal"><span class="kicker">Experience</span><h2>Where I've worked</h2></div>
       <ul class="plain-list">
         <li class="plain-item">
           <div class="plain-date">Dec 2025 – May 2026</div>
@@ -422,7 +537,7 @@
 
   <section id="education" class="band-deep">
     <div class="wrap prose">
-      <div class="section-head"><span class="kicker">Education</span><h2>Academic background</h2></div>
+      <div class="section-head scroll-reveal"><span class="kicker">Education</span><h2>Academic background</h2></div>
       <ul class="plain-list">
         <li class="plain-item">
           <div class="plain-date">Jul 2020 – Nov 2024</div>
@@ -452,18 +567,29 @@
 
   <section id="skills">
     <div class="wrap prose">
-      <div class="section-head"><span class="kicker">Skills</span><h2>Tools I work with</h2></div>
+      <div class="section-head scroll-reveal"><span class="kicker">Skills</span><h2>Tools I work with</h2></div>
       <div class="skills-block">
         <h3>Programming &amp; machine learning</h3>
         <p>Python, C, and C++, with scikit-learn workflows covering regression, clustering, ensemble methods, and SMOTE-ENN, alongside general data analysis.</p>
+        <div class="tech-chips">
+          <span class="tech-chip">Python</span><span class="tech-chip">C++</span><span class="tech-chip">scikit-learn</span>
+          <span class="tech-chip">Pandas</span><span class="tech-chip">NumPy</span>
+        </div>
       </div>
       <div class="skills-block">
         <h3>Web &amp; databases</h3>
         <p>JavaScript across Node.js, Express, React, and Next.js, with MongoDB and Firebase for data, and HTML, CSS, and Bootstrap for the front end.</p>
+        <div class="tech-chips">
+          <span class="tech-chip">JavaScript</span><span class="tech-chip">Node.js</span><span class="tech-chip">React</span>
+          <span class="tech-chip">Next.js</span><span class="tech-chip">MongoDB</span><span class="tech-chip">Firebase</span>
+        </div>
       </div>
       <div class="skills-block">
         <h3>Tools</h3>
         <p>Git and GitHub for version control, Hadoop for data ingestion, and Microsoft Word for documentation.</p>
+        <div class="tech-chips">
+          <span class="tech-chip">Git</span><span class="tech-chip">GitHub</span><span class="tech-chip">Hadoop</span>
+        </div>
       </div>
     </div>
   </section>
@@ -471,7 +597,7 @@
   <section class="band-deep">
     <div class="wrap prose two-col">
       <div>
-        <div class="section-head"><span class="kicker">Certifications</span></div>
+        <div class="section-head scroll-reveal"><span class="kicker">Certifications</span></div>
         <ul class="simple-list">
           <li>Machine Learning Virtual Internship<div class="simple-meta">CodSoft, IT Service</div></li>
           <li>Certificate of Reviewing<div class="simple-meta">European Journal of Computer Sciences and Informatics</div></li>
@@ -482,7 +608,7 @@
         </ul>
       </div>
       <div>
-        <div class="section-head"><span class="kicker">Honours &amp; languages</span></div>
+        <div class="section-head scroll-reveal"><span class="kicker">Honours &amp; languages</span></div>
         <ul class="simple-list">
           <li>Study in India (G2) Scholarship<div class="simple-meta">Jain (Deemed-to-be University), 2021</div></li>
           <li>The Chancellor's Scholarship<div class="simple-meta">Jain (Deemed-to-be University), 2020</div></li>
@@ -557,6 +683,16 @@
   </div>
 </div>
 
+<button id="cmdkTrigger" aria-label="Open command palette">
+  <span>Jump to…</span><kbd id="cmdkKeyHint">Ctrl K</kbd>
+</button>
+<div id="cmdkBackdrop">
+  <div id="cmdkModal" role="dialog" aria-label="Command palette">
+    <input id="cmdkInput" type="text" placeholder="Jump to a section… (About, Projects, Contact…)" autocomplete="off">
+    <ul id="cmdkList"></ul>
+  </div>
+</div>
+
 <script>
   var toggle = document.getElementById('navToggle');
   var links = document.getElementById('navLinks');
@@ -574,10 +710,79 @@
     setTimeout(function(){ document.getElementById('heroPhoto').classList.add('in'); }, 260);
   });
 
+  // ---------- Hero terminal: typed lines ----------
+  (function(){
+    var body = document.getElementById('terminalBody');
+    if(!body) return;
+    var lines = [
+      { prompt: 'whoami', output: 'Tonmoy Day Sarkar — ML / software engineer' },
+      { prompt: 'cat focus.txt', output: 'recommendation systems · churn prediction · full-stack' },
+      { prompt: 'echo $LOCATION', output: 'Tangail, Bangladesh' }
+    ];
+    var li = 0, ci = 0, typingOutput = false;
+    function typeStep(){
+      var line = lines[li];
+      var promptEl, outputEl;
+      var current = body.querySelectorAll('.terminal-line-wrap')[li];
+      if(!current){
+        current = document.createElement('div');
+        current.className = 'terminal-line-wrap';
+        current.innerHTML = '<span class="terminal-line"><span class="terminal-prompt">$</span></span><span class="terminal-output"></span>';
+        body.appendChild(current);
+      }
+      promptEl = current.querySelector('.terminal-line');
+      outputEl = current.querySelector('.terminal-output');
+
+      if(!typingOutput){
+        if(ci < line.prompt.length){
+          promptEl.lastChild.textContent = (promptEl.lastChild.textContent || '') ;
+          promptEl.innerHTML = '<span class="terminal-prompt">$</span>' + escapeHtmlClient(line.prompt.slice(0, ci + 1)) + '<span class="terminal-cursor"></span>';
+          ci++;
+          setTimeout(typeStep, 38);
+        } else {
+          promptEl.innerHTML = '<span class="terminal-prompt">$</span>' + escapeHtmlClient(line.prompt);
+          typingOutput = true;
+          ci = 0;
+          setTimeout(typeStep, 220);
+        }
+      } else {
+        if(ci < line.output.length){
+          outputEl.textContent = line.output.slice(0, ci + 1);
+          ci++;
+          setTimeout(typeStep, 16);
+        } else {
+          li++;
+          ci = 0;
+          typingOutput = false;
+          if(li < lines.length) setTimeout(typeStep, 380);
+        }
+      }
+    }
+    setTimeout(typeStep, 700);
+  })();
+
+  // ---------- Scroll reveal for section headings ----------
+  (function(){
+    var targets = document.querySelectorAll('.scroll-reveal');
+    if(!('IntersectionObserver' in window) || targets.length === 0){
+      targets.forEach(function(t){ t.classList.add('in'); });
+      return;
+    }
+    var observer = new IntersectionObserver(function(entries){
+      entries.forEach(function(entry){
+        if(entry.isIntersecting){
+          entry.target.classList.add('in');
+          observer.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.2, rootMargin: '0px 0px -40px 0px' });
+    targets.forEach(function(t){ observer.observe(t); });
+  })();
+
   // ---------- Backend base URL ----------
   // Replace with your deployed Render backend URL (see README). Every other
   // endpoint (publications, projects, tracking, chat) is derived from this.
-  var API_BASE = "https://tonmoy-day-sarkar.onrender.com";
+  var API_BASE = "https://your-backend.onrender.com";
   var CONTACT_API_URL = API_BASE + "/api/contact";
 
   var contactForm = document.getElementById('contactForm');
@@ -656,7 +861,7 @@
         return a.getAttribute('href');
       });
       var pubList = document.querySelector('.pub-list');
-      var romanNumerals = ['ii','iii','iv','v','vi','vii','viii','ix','x','xi','xii'];
+      var romanNumerals = ['v','vi','vii','viii','ix','x','xi','xii'];
       var newCount = 0;
       result.publications.forEach(function(pub){
         var doiUrl = pub.doi ? 'https://doi.org/' + pub.doi : null;
@@ -757,6 +962,210 @@
   }
   chatSend.addEventListener('click', sendChat);
   chatInput.addEventListener('keydown', function(e){ if(e.key === 'Enter') sendChat(); });
+
+  // ---------- Hero node-graph background ----------
+  // Evokes the clustering/network-graph nature of Tonmoy's ML research
+  // (collaborative filtering, k-means clustering) rather than a generic
+  // particle effect. Respects reduced-motion preference.
+  (function(){
+    var canvas = document.getElementById('heroCanvas');
+    if(!canvas) return;
+    var ctx = canvas.getContext('2d');
+    var header = canvas.closest('.hero');
+    var reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    var nodes = [];
+    var mouse = { x: null, y: null };
+    var width, height, dpr;
+
+    function palette(){
+      var styles = getComputedStyle(document.documentElement);
+      return {
+        node: styles.getPropertyValue('--text-on-ink-muted').trim() || '#a6a297',
+        accent: styles.getPropertyValue('--brass').trim() || '#a9812f',
+        line: styles.getPropertyValue('--line-on-ink').trim() || 'rgba(255,255,255,.14)'
+      };
+    }
+
+    function resize(){
+      var rect = header.getBoundingClientRect();
+      dpr = Math.min(window.devicePixelRatio || 1, 2);
+      width = rect.width; height = rect.height;
+      canvas.width = width * dpr; canvas.height = height * dpr;
+      canvas.style.width = width + 'px'; canvas.style.height = height + 'px';
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+      var count = Math.max(16, Math.min(46, Math.round((width * height) / 26000)));
+      nodes = [];
+      for(var i = 0; i < count; i++){
+        var isHub = Math.random() < 0.16;
+        nodes.push({
+          x: Math.random() * width,
+          y: Math.random() * height,
+          vx: (Math.random() - 0.5) * 0.18,
+          vy: (Math.random() - 0.5) * 0.18,
+          r: isHub ? 2.6 : 1.5,
+          hub: isHub
+        });
+      }
+    }
+
+    function step(){
+      var colors = palette();
+      ctx.clearRect(0, 0, width, height);
+      var maxDist = Math.min(150, width * 0.16);
+
+      for(var i = 0; i < nodes.length; i++){
+        var n = nodes[i];
+        if(!reduceMotion){
+          n.x += n.vx; n.y += n.vy;
+          if(n.x < 0 || n.x > width) n.vx *= -1;
+          if(n.y < 0 || n.y > height) n.vy *= -1;
+          if(mouse.x !== null){
+            var dx = n.x - mouse.x, dy = n.y - mouse.y;
+            var d = Math.sqrt(dx*dx + dy*dy);
+            if(d < 90 && d > 0.01){
+              var force = (90 - d) / 90 * 0.06;
+              n.x += (dx / d) * force; n.y += (dy / d) * force;
+            }
+          }
+        }
+      }
+
+      for(var a = 0; a < nodes.length; a++){
+        for(var b = a + 1; b < nodes.length; b++){
+          var dx2 = nodes[a].x - nodes[b].x, dy2 = nodes[a].y - nodes[b].y;
+          var dist = Math.sqrt(dx2*dx2 + dy2*dy2);
+          if(dist < maxDist){
+            ctx.globalAlpha = (1 - dist / maxDist) * 0.5;
+            ctx.strokeStyle = colors.line;
+            ctx.lineWidth = 1;
+            ctx.beginPath();
+            ctx.moveTo(nodes[a].x, nodes[a].y);
+            ctx.lineTo(nodes[b].x, nodes[b].y);
+            ctx.stroke();
+          }
+        }
+      }
+
+      ctx.globalAlpha = 1;
+      for(var j = 0; j < nodes.length; j++){
+        var node = nodes[j];
+        ctx.beginPath();
+        ctx.fillStyle = node.hub ? colors.accent : colors.node;
+        ctx.globalAlpha = node.hub ? 0.85 : 0.55;
+        ctx.arc(node.x, node.y, node.r, 0, Math.PI * 2);
+        ctx.fill();
+      }
+      ctx.globalAlpha = 1;
+
+      if(!reduceMotion) requestAnimationFrame(step);
+    }
+
+    resize();
+    step();
+    window.addEventListener('load', resize);
+    window.addEventListener('resize', function(){
+      clearTimeout(window._heroResizeT);
+      window._heroResizeT = setTimeout(resize, 150);
+    });
+    header.addEventListener('mousemove', function(e){
+      var rect = header.getBoundingClientRect();
+      mouse.x = e.clientX - rect.left; mouse.y = e.clientY - rect.top;
+    });
+    header.addEventListener('mouseleave', function(){ mouse.x = null; mouse.y = null; });
+  })();
+
+  // ---------- Command palette (Ctrl/Cmd+K) ----------
+  (function(){
+    var isMac = /Mac|iPhone|iPad/.test(navigator.platform || navigator.userAgent);
+    var keyHint = document.getElementById('cmdkKeyHint');
+    if(keyHint && isMac) keyHint.textContent = '⌘K';
+
+    var items = [
+      { label: 'About', hint: 'Research, applied end to end', href: '#about' },
+      { label: 'Publications', hint: 'Peer-reviewed work', href: '#publications' },
+      { label: 'Projects', hint: 'Recent work on GitHub', href: '#projects' },
+      { label: 'Experience', hint: 'Where I\'ve worked', href: '#experience' },
+      { label: 'Education', hint: 'Academic background', href: '#education' },
+      { label: 'Skills', hint: 'Tools and technologies', href: '#skills' },
+      { label: 'Contact', hint: 'Get in touch', href: '#contact' },
+      { label: 'Download CV', hint: 'PDF resume', href: 'Tonmoy_Day_Sarkar_CV.pdf' },
+      { label: 'GitHub', hint: 'github.com/tonmoy7722', href: 'https://github.com/tonmoy7722' },
+      { label: 'Google Scholar', hint: 'Publications record', href: 'https://scholar.google.com/citations?hl=en&user=LB6A9soAAAAJ' },
+      { label: 'LinkedIn', hint: 'linkedin.com/in/tonmoy7722', href: 'https://www.linkedin.com/in/tonmoy7722/' }
+    ];
+
+    var backdrop = document.getElementById('cmdkBackdrop');
+    var input = document.getElementById('cmdkInput');
+    var list = document.getElementById('cmdkList');
+    var trigger = document.getElementById('cmdkTrigger');
+    var activeIndex = 0;
+    var filtered = items;
+
+    function render(){
+      var q = input.value.trim().toLowerCase();
+      filtered = items.filter(function(it){ return it.label.toLowerCase().indexOf(q) !== -1; });
+      activeIndex = 0;
+      if(filtered.length === 0){
+        list.innerHTML = '<li class="cmdk-empty">No matches</li>';
+        return;
+      }
+      list.innerHTML = filtered.map(function(it, idx){
+        return '<li class="cmdk-item' + (idx === 0 ? ' active' : '') + '" data-idx="' + idx + '">' +
+          '<span>' + it.label + '</span><span class="cmdk-hint">' + it.hint + '</span></li>';
+      }).join('');
+    }
+
+    function setActive(idx){
+      var els = list.querySelectorAll('.cmdk-item');
+      if(!els.length) return;
+      activeIndex = (idx + els.length) % els.length;
+      els.forEach(function(el, i){ el.classList.toggle('active', i === activeIndex); });
+      els[activeIndex].scrollIntoView({ block: 'nearest' });
+    }
+
+    function go(it){
+      if(!it) return;
+      close();
+      if(it.href.indexOf('#') === 0){
+        var target = document.querySelector(it.href);
+        if(target) target.scrollIntoView({ behavior: 'smooth' });
+      } else {
+        window.open(it.href, it.href.indexOf('http') === 0 ? '_blank' : '_self');
+      }
+    }
+
+    function open(){
+      backdrop.classList.add('open');
+      input.value = '';
+      render();
+      setTimeout(function(){ input.focus(); }, 20);
+    }
+    function close(){
+      backdrop.classList.remove('open');
+    }
+
+    trigger.addEventListener('click', open);
+    backdrop.addEventListener('click', function(e){ if(e.target === backdrop) close(); });
+    input.addEventListener('input', render);
+    list.addEventListener('click', function(e){
+      var el = e.target.closest('.cmdk-item');
+      if(el) go(filtered[parseInt(el.getAttribute('data-idx'), 10)]);
+    });
+
+    document.addEventListener('keydown', function(e){
+      var meta = isMac ? e.metaKey : e.ctrlKey;
+      if(meta && e.key.toLowerCase() === 'k'){
+        e.preventDefault();
+        backdrop.classList.contains('open') ? close() : open();
+        return;
+      }
+      if(!backdrop.classList.contains('open')) return;
+      if(e.key === 'Escape'){ close(); }
+      else if(e.key === 'ArrowDown'){ e.preventDefault(); setActive(activeIndex + 1); }
+      else if(e.key === 'ArrowUp'){ e.preventDefault(); setActive(activeIndex - 1); }
+      else if(e.key === 'Enter'){ e.preventDefault(); go(filtered[activeIndex]); }
+    });
+  })();
 </script>
 
 </body>
